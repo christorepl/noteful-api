@@ -14,10 +14,9 @@ notesRouter
         .catch(next)
 })
     .post(jsonParser, (req, res, next) => {
-    console.log(req.body)
-    const knexInstance = req.app.get('db')
     const { note_name, content, folder_id } = req.body
     const newNote = { note_name, content, folder_id}
+    console.log('new note: ', newNote)
     for (const [key, value] of Object.entries(newNote)) {
         if (value == null) {
             return res.status(400).json({
@@ -25,7 +24,7 @@ notesRouter
             })
         }
     }
-    NotesService.insertNote(knexInstance, newNote)
+    NotesService.insertNote(req.app.get('db'), newNote)
         .then(note => {
             res
                 .status(201)
